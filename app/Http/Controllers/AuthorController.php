@@ -6,6 +6,8 @@ use App\Models\Author;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
 
+use Illuminate\Http\Request;
+
 class AuthorController extends Controller
 {
     /**
@@ -13,7 +15,7 @@ class AuthorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {   
 
         //1. rikiavimas - duomenu kiekis nesikeicia keiciasi tik duomenu tvarka pagal tam tikra atributa
@@ -33,7 +35,7 @@ class AuthorController extends Controller
         // false - ASC, nuo maziausio iki didziausio
 
 
-        // 1000 autoriu
+        // 100 autoriu
         // kreipkis i duomenu baze
         // PASIIMK VISKA
         // sukisk viska i kolekcija
@@ -48,16 +50,59 @@ class AuthorController extends Controller
         //kreipkis i duomenu baze ir isrikiuok duomenubazeje(duombazes algoritmas isrikiuoja)
         //viskas patalpinama i kolekcija
         //ir kolekcija iskart atvaizduot
-        $authors = Author::orderBy('name', 'ASC' )->get(); //mes negalime algoritmo pagal kuri rikiuojama
         
+
+        $sortCollumn = $request->sortCollumn; //name
+        $sortOrder = $request->sortOrder; // ASC
+
+        if(empty($sortCollumn) || empty($sortOrder)) {
+            $authors = Author::all();
+        } else {
+            $authors = Author::orderBy($sortCollumn, $sortOrder )->get();
+        }   
+
         
+        $select_array = array('id','name','surname','username','description');
+        // 0(raktas/key) - id(reiksme)
+        // 1(raktas/key) - name(reiksme)
+        // ..        
+        //pasiimu viena vieninteli autoriu
+        // $autorius = $authors->first(); //objektas
+
+        // $autorius = (array)$autorius;
+        // $autorius = array_keys($autorius);
+
+        // $select_array = array();
+        // foreach($autorius as $autoriaus_parametras)
+        // {
+        //     $select_array[] = $autoriaus_parametras;
+        // }
+
+
+     //mes negalime algoritmo pagal kuri rikiuojama
+        
+        //1. index.blade.php dokumente tureti forma
+        
+        //elektronine parduotuve
+        //isirikiavot kompiuterius pagal kaina
+        //nusiusti draugui
+
+        //POST /kompiuteriai - jisai musu isrikiuotu kompiuteriu nematytu
+        //GET /kompiuteriai?sortCollum=price&order=DESC
+
+        //2. POST GET. GET. Rikiavimo stulpeli ir rikiavimo tvarka
+        //3. Spaudziu mygtuka Rikiuok
+        //4. Koks action? kokf formos veiksmo kelias? index.blade.php/ route("author.index")/''
+        //5. Ko index() funkcijai truksta kad paimti kintamuosius is formos?
+
+
         //musu visi duomenys paimti is duomenu bazes, masyvas
         // $authors - kolekcija
         //kolekcija - tam tikras isplestas masyvas kuris savyje turi duomenu apdorojimo funkcijas
 
         //kolekcija yra visada rikiuojama pagal unikalu identifikatoriu(ID) didejimo tvarka
 
-        return view('author.index', ['authors' => $authors]);
+        return view('author.index', ['authors' => $authors, 'sortCollumn' =>$sortCollumn, 'sortOrder'=> $sortOrder, 'select_array' => $select_array,  ]);
     }
 
     /**
