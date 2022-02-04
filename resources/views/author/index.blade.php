@@ -40,7 +40,14 @@
     <div class="test">
         {{$sortCollumn}}
         {{$sortOrder}}
-    </div>    
+    </div>
+    <div class="search_form">
+        <form action="{{route('author.search')}}" method="GET">
+            @csrf
+            <input type="text" name="search_key" placeholder="Search..."/>
+            <button type="submit">Search</button>
+        </form>    
+    </div>        
     <table class="table table-striped">
     <tr>
         <th>ID</th>

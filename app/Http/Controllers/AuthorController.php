@@ -7,6 +7,8 @@ use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class AuthorController extends Controller
 {
@@ -17,6 +19,9 @@ class AuthorController extends Controller
      */
     public function index(Request $request)
     {   
+
+        //filtravimo pavyzdys - paieska
+
 
         //1. rikiavimas - duomenu kiekis nesikeicia keiciasi tik duomenu tvarka pagal tam tikra atributa
 
@@ -61,8 +66,19 @@ class AuthorController extends Controller
             $authors = Author::orderBy($sortCollumn, $sortOrder )->get();
         }   
 
-        
-        $select_array = array('id','name','surname','username','description');
+
+        // $select_array = array('id','name','surname','username','description');
+
+        $select_array =  array_keys($authors->first()->getAttributes());
+
+        //  $select_array = DB::getSchemaBuilder()->getColumnListing('authors');
+
+        //$authors - kolekcija, sudetingesnis masyvas
+        // first() - ji grazina viena irasa is kolekcijos
+        // paprastas objektas, kolekcijos objektas - raktu ir informacijos
+        // getAttributes() - jinai gauna informacija apie kolekcijos objekta kaip apie paprasta masyva
+        //array_keys funkcija galiu pasiimti duomenu bazes stulpeliu pavadinimus
+
         // 0(raktas/key) - id(reiksme)
         // 1(raktas/key) - name(reiksme)
         // ..        
@@ -169,5 +185,63 @@ class AuthorController extends Controller
     public function destroy(Author $author)
     {
         //
+    }
+
+    public function search(Request $request) {
+        // $authors = Author::all();
+
+        //Atrinkti autoriu/ius kurio/iu id = 34
+
+
+        
+        // $tekstas = '34'; //tekstas
+        
+        // $skaicius = 34;// skaicius
+
+        // if($tekstas === $skaicius) 
+        // {
+        //     dd('tiesa');
+        // } else {
+        //     dd('melas');
+        // }
+
+        // $authors = Author::where('name', 'Paula')->get();
+
+        $search_key = $request->search_key;
+
+        $authors = Author::where('description', 'LIKE' , '%'.$search_key.'%')
+        ->orWhere('name', 'LIKE', '%'.$search_key.'%')
+        ->orWhere('surname', 'LIKE', '%'.$search_key.'%')
+        ->orWhere('username', 'LIKE', '%'.$search_key.'%')
+        ->orWhere('id', 'LIKE', '%'.$search_key.'%')
+        ->get();
+
+        //AND ir OR
+        // description panasus yra paieskos zodi ARBA(OR) vardas panasus i paieskos zodi    
+        // description panasus yra paieskos zodi ARBA(OR) vardas panasus i paieskos zodi ARBA pavarde panasus i paieskos zodi
+        
+
+        // id skaicius
+        // 3 like 3
+        // skaiciu paverstu i teksta 3 => '3' 13=> '13'
+        // simboline paieska
+        //%% iesko teksto kuris turi specifini simboli 
+
+        //where() istikro galime nurodyti 3 parametrus
+        //1 - parametras stulpelio pavadinimas
+        //2 - operacijos veiksmu, =, <, >, <=, >=, LIKE
+        // 3 - reiksme
+        
+        // name = 'Paula'
+        // id = 34
+        
+        //Paieska pagal id stulpeli ir ivedame skaiciu 3
+        // 3
+        //13
+        //23
+        //33 ...
+        
+        // imu autorius, kur yra kazkokia salyga(kur id = 34)
+        return view('author.search', ['authors'=> $authors ]);
     }
 }

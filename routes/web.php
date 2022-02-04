@@ -23,5 +23,13 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::prefix('authors')->group(function() {
     Route::get('', 'App\Http\Controllers\AuthorController@index')->name('author.index');
+    Route::get('search', 'App\Http\Controllers\AuthorController@search')->name('author.search');
+
+});
+
+Route::prefix('books')->group(function() {
+    Route::get('', 'App\Http\Controllers\BookController@index')->name('book.index');
+    Route::get('bookfilter', 'App\Http\Controllers\BookController@bookfilter')->name('book.bookfilter');
+    // Route::get('search', 'App\Http\Controllers\AuthorController@search')->name('author.search');
 
 });
