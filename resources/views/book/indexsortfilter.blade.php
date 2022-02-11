@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">   
-
-
-    <form method="GET" action="{{route('book.indexpagination')}}">
+<div class="container">
+    <form method="GET" action="{{route('book.indexsortfilter')}}">
         @csrf
         <select name="sortCollumn">
             @foreach ($select_array as $key=>$item)
@@ -24,9 +22,21 @@
                 <option value="asc">Ascending</option>
                 <option value="desc" selected>Descending</option>
             @endif
-        </select>    
-        <button type="submit">Rikiuok</button>
+        </select>
+        <select name="author_id">
+            {{-- Visus autorius --}}
+            <option value="all">All</option>
+            @foreach ($authors as $author)
+                @if ($author->id == $author_id)
+                    <option value="{{$author->id}}" selected>{{$author->name}} {{$author->surname}}</option>
+                @else
+                    <option value="{{$author->id}}">{{$author->name}} {{$author->surname}}</option>
+                @endif    
+            @endforeach
+        </select>   
+        <button class="btn btn-secondary" type="submit">Sort</button>
     </form>
+    <a href="{{route('book.indexsortfilter')}}" class="btn btn-primary">Clear filter</a>   
 
 <table class="table table-striped">
     <tr>
@@ -48,14 +58,7 @@
         @endforeach
      
     </table>
-    {{-- {{ $books->links() }} --}}
-{{-- 
-    {{}} - vykdoma echo funkcija. Escape. < ? "" 
-    
-    {!! !!} - vykdoma echo funkcija. Unescaped .
-    
-    {{}}
-    {!! !!} --}}
+
     {!! $books->appends(Request::except('page'))->render() !!}
 </div>    
 
