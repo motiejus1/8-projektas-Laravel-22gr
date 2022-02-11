@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Author;
+use App\Models\PaginationSetting;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 
@@ -174,7 +175,10 @@ class BookController extends Controller
         $sortOrder = $request->sortOrder;
         $author_id = $request->author_id;// select = 'all'
 
-        $page_limit = 2;
+        
+        $paginationSettings = PaginationSetting::where('visible', '=', 1)->get();
+        
+        $page_limit = 15;
 
 
 
@@ -202,6 +206,6 @@ class BookController extends Controller
         // $books 
         $authors = Author::all();
 
-        return view('book.indexsortfilter', ['books'=>$books, 'authors' => $authors, 'select_array'=>$select_array, 'sortCollumn'=>$sortCollumn, 'sortOrder' => $sortOrder, 'author_id'=> $author_id ]);
+        return view('book.indexsortfilter', ['books'=>$books, 'authors' => $authors, 'select_array'=>$select_array, 'sortCollumn'=>$sortCollumn, 'sortOrder' => $sortOrder, 'author_id'=> $author_id, 'paginationSettings' => $paginationSettings ]);
     }
 }

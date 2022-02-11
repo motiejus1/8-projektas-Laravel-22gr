@@ -33,7 +33,12 @@
                     <option value="{{$author->id}}">{{$author->name}} {{$author->surname}}</option>
                 @endif    
             @endforeach
-        </select>   
+        </select>
+        <select name="page_limit">
+            @foreach ($paginationSettings as $setting)
+                <option value={{$setting->value}}>{{$setting->title}}</option> 
+            @endforeach
+        </select>
         <button class="btn btn-secondary" type="submit">Sort</button>
     </form>
     <a href="{{route('book.indexsortfilter')}}" class="btn btn-primary">Clear filter</a>   
