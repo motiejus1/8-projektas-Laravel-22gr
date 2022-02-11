@@ -131,4 +131,40 @@ class BookController extends Controller
         $books = Book::where('author_id', '=' , $author_id)->get();
         return view('book.bookfilter', ['books' =>$books]);
     }
+
+    public function indexpagination(Request $request) {
+        //paparastasis puslpaiavimas
+        //simplePaginate
+
+        //pilnasis puslapiavimas
+        //paginate
+
+          //Isrikiuoti elementus pagal id mazejimo tvarka
+
+        // $books=Book::all()->sortBy('id', SORT_REGULAR, true);
+
+        $sortCollumn = $request->sortCollumn; //name
+        $sortOrder = $request->sortOrder; // ASC/DESC
+
+        //Rikiavimo stulpelius
+        $tem_book = Book::all();
+        $book_collumns = array_keys($tem_book->first()->getAttributes());
+
+
+        //
+        if(empty($sortCollumn) || empty($sortOrder)) {
+            $books = Book::paginate(15);
+        } else {
+            $books = Book::orderBy($sortCollumn, $sortOrder )->paginate(15);
+        }   
+
+         $select_array =  $book_collumns;
+
+
+        // $books = Book::orderBy('title', 'DESC')->paginate(15);
+
+        // $books = Book::paginate(15);
+
+        return view('book.indexpagination', ['books' => $books,'sortCollumn' =>$sortCollumn, 'sortOrder'=> $sortOrder, 'select_array' => $select_array]);
+    }
 }
