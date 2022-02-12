@@ -178,7 +178,9 @@ class BookController extends Controller
         
         $paginationSettings = PaginationSetting::where('visible', '=', 1)->get();
         
-        $page_limit = 15;
+
+        $page_limit = $request->page_limit;
+        // $page_limit = 15;
 
 
 
@@ -188,15 +190,27 @@ class BookController extends Controller
             $select_array =  $book_collumns;
 
         //pasirinkti visas knygas kuriu autoriaus id = 1 ir isrikiuoti pagal id mazejimo tvarka
-        if(empty( $sortCollumn) || empty($sortOrder) || empty($author_id) )
-        {
-            $books = Book::paginate($page_limit);
-        } else {
-            if($author_id == 'all') {
-                    $books= Book::orderBy($sortCollumn, $sortOrder)->paginate($page_limit);
-            } else {
-                $books = Book::where('author_id', '=', $author_id)->orderBy($sortCollumn, $sortOrder)->paginate($page_limit);
 
+        //Kada page_limit = 1, tai reiskia kad mes norime atvaizduoti visas reiksmes
+        //mes norime nuimti puslapiavima
+        if(empty( $sortCollumn) || empty($sortOrder) || empty($author_id) )
+        {   
+            $books = Book::paginate($page_limit);
+        
+        } else {
+
+            if($author_id == 'all') {
+                if($page_limit == 1) {
+                    $books= Book::orderBy($sortCollumn, $sortOrder)->get();
+                } else {
+                    $books= Book::orderBy($sortCollumn, $sortOrder)->paginate($page_limit);
+                }
+            } else {
+                if($page_limit == 1) {
+                    $books = Book::where('author_id', '=', $author_id)->orderBy($sortCollumn, $sortOrder)->get();
+                } else {
+                    $books = Book::where('author_id', '=', $author_id)->orderBy($sortCollumn, $sortOrder)->paginate($page_limit);
+                }
             }   
         }
 
@@ -206,6 +220,14 @@ class BookController extends Controller
         // $books 
         $authors = Author::all();
 
-        return view('book.indexsortfilter', ['books'=>$books, 'authors' => $authors, 'select_array'=>$select_array, 'sortCollumn'=>$sortCollumn, 'sortOrder' => $sortOrder, 'author_id'=> $author_id, 'paginationSettings' => $paginationSettings ]);
+        return view('book.indexsortfilter', [
+            'books'=> $books, 
+            'authors' => $authors, 
+            'select_array'=>$select_array, 
+            'sortCollumn'=>$sortCollumn, 
+            'sortOrder' => $sortOrder, 
+            'author_id'=> $author_id, 
+            'paginationSettings' => $paginationSettings, 
+            'page_limit' => $page_limit ]);
     }
 }
