@@ -230,4 +230,8 @@ class BookController extends Controller
             'paginationSettings' => $paginationSettings, 
             'page_limit' => $page_limit ]);
     }
+
+    public function indexsortable() {
+        return view('book.indexsortable');
+    }
 }

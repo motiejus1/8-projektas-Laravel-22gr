@@ -32,6 +32,8 @@ Route::prefix('books')->group(function() {
     Route::get('bookfilter', 'App\Http\Controllers\BookController@bookfilter')->name('book.bookfilter');
     Route::get('indexpagination', 'App\Http\Controllers\BookController@indexpagination')->name('book.indexpagination');
     Route::get('indexsortfilter', 'App\Http\Controllers\BookController@indexsortfilter')->name('book.indexsortfilter');
+    Route::get('indexsortable', 'App\Http\Controllers\BookController@indexsortable')->name('book.indexsortable');
+
     // Route::get('search', 'App\Http\Controllers\AuthorController@search')->name('author.search');
 
 });
