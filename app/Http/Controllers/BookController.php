@@ -232,6 +232,12 @@ class BookController extends Controller
     }
 
     public function indexsortable() {
-        return view('book.indexsortable');
+
+
+        //atfiltruoti duomenis kur author_id = 2
+
+        $books = Book::where("author_id", "=", 2)->sortable()->paginate(1);
+       
+        return view('book.indexsortable', ['books'=> $books]);
     }
 }
