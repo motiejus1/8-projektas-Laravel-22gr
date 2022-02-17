@@ -245,14 +245,42 @@ class BookController extends Controller
             'page_limit' => $page_limit ]);
     }
 
-    public function indexsortable() {
+    public function indexsortable(Request $request) {
 
+        $author_id = $request->author_id;
+        $page_limit = $request->page_limit;
+        
+        $sort  = $request->sort;
+        $direction  = $request->direction;
 
         //atfiltruoti duomenis kur author_id = 2
+        $authors = Author::all();
+        $paginationSettings = PaginationSetting::where('visible', '=', 1)->get();
 
-        $books = Book::sortable()->paginate(20);
-       
-        return view('book.indexsortable', ['books'=> $books]);
+        if(empty($author_id) || $author_id == 'all') {
+            if($page_limit == 1) {
+                //rodomi visi irasai
+                $books = Book::sortable()->get();
+            } else {
+                $books = Book::sortable()->paginate($page_limit);
+            }
+        } else {
+            if($page_limit == 1) {
+                //rodomi visi irasai
+                $books = Book::where('author_id', '=', $author_id)->sortable()->get();
+            } else {
+                $books = Book::where('author_id', '=', $author_id)->sortable()->paginate($page_limit);
+            }
+        }   
+        return view('book.indexsortable', [
+            'books'=> $books,
+            'authors' => $authors,
+            'paginationSettings' => $paginationSettings,
+            'author_id'=> $author_id,
+            'page_limit' => $page_limit,
+            'sort' => $sort,
+            'direction' => $direction,
+        ]);
     }
 
     public function indexadvancedsort() {
