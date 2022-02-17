@@ -169,6 +169,37 @@ class BookController extends Controller
         return view('book.indexpagination', ['books' => $books,'sortCollumn' =>$sortCollumn, 'sortOrder'=> $sortOrder, 'select_array' => $select_array]);
     }
 
+    private function isPaginateFilter($page_limit, $author_id, $sortCollumn, $sortOrder ) {
+        if($page_limit == 1) {
+          return $books = Book::where('author_id', '=', $author_id)->orderBy($sortCollumn, $sortOrder)->get();
+        } 
+        return $books = Book::where('author_id', '=', $author_id)->orderBy($sortCollumn, $sortOrder)->paginate($page_limit);
+        
+    }
+
+    private function isPaginateSort($page_limit, $sortCollumn, $sortOrder) {
+        if($page_limit == 1) {
+            //nera puslpaiavimo
+            if($sortCollumn == 'author_id')
+            {
+              return $books = Book::select('books.*')->join('authors','books.author_id', '=', 'authors.id')->orderBy('authors.name', $sortOrder)->get();
+               
+            } 
+                return $books= Book::orderBy($sortCollumn, $sortOrder)->get();
+
+        } else {
+            //ir kai yra puslapiavimas
+            if($sortCollumn == 'author_id') {
+              return $books = Book::select('books.*')->join('authors','books.author_id', '=', 'authors.id')->orderBy('authors.name', $sortOrder)->paginate($page_limit);
+          
+            } 
+            
+            return $books= Book::orderBy($sortCollumn, $sortOrder)->paginate($page_limit);
+            
+        }
+        return 0;
+    }
+
     public function indexsortfilter(Request $request) {
 
         $sortCollumn = $request->sortCollumn;
@@ -178,46 +209,29 @@ class BookController extends Controller
         
         $paginationSettings = PaginationSetting::where('visible', '=', 1)->get();
         
-
-        $page_limit = $request->page_limit;
-        // $page_limit = 15;
-
-
-
-            //Rikiavimo stulpelius
-            $tem_book = Book::all();
-            $book_collumns = array_keys($tem_book->first()->getAttributes());
-            $select_array =  $book_collumns;
-
-        //pasirinkti visas knygas kuriu autoriaus id = 1 ir isrikiuoti pagal id mazejimo tvarka
-
-        //Kada page_limit = 1, tai reiskia kad mes norime atvaizduoti visas reiksmes
-        //mes norime nuimti puslapiavima
-        if(empty( $sortCollumn) || empty($sortOrder) || empty($author_id) )
-        {   
-            $books = Book::paginate($page_limit);
-        
-        } else {
-
-            if($author_id == 'all') {
-                if($page_limit == 1) {
-                    $books= Book::orderBy($sortCollumn, $sortOrder)->get();
-                } else {
-                    $books= Book::orderBy($sortCollumn, $sortOrder)->paginate($page_limit);
-                }
-            } else {
-                if($page_limit == 1) {
-                    $books = Book::where('author_id', '=', $author_id)->orderBy($sortCollumn, $sortOrder)->get();
-                } else {
-                    $books = Book::where('author_id', '=', $author_id)->orderBy($sortCollumn, $sortOrder)->paginate($page_limit);
-                }
-            }   
+        $sortBool = true;
+                
+        if($sortOrder == "asc"){
+            $sortBool = false;
         }
 
-        // $books = Book::where('author_id', '=' , $author_id)->get();
-        // $books = Book::orderBy($sortCollumn, $sortOrder )->get();
+        $page_limit = $request->page_limit;
 
-        // $books 
+            //Rikiavimo stulpelius
+        $tem_book = Book::all();
+        $book_collumns = array_keys($tem_book->first()->getAttributes());
+        $select_array =  $book_collumns;
+
+        if(empty( $sortCollumn) || empty($sortOrder) || empty($author_id) )
+        {   
+            $books = Book::paginate($page_limit);     
+        } else {
+            if($author_id == 'all') {
+                $books = $this->isPaginateSort($page_limit, $sortCollumn, $sortOrder);
+            } else {
+                $books = $this->isPaginateFilter($page_limit, $author_id, $sortCollumn, $sortOrder);
+            }   
+        }
         $authors = Author::all();
 
         return view('book.indexsortfilter', [
@@ -236,8 +250,24 @@ class BookController extends Controller
 
         //atfiltruoti duomenis kur author_id = 2
 
-        $books = Book::where("author_id", "=", 2)->sortable()->paginate(1);
+        $books = Book::sortable()->paginate(20);
        
         return view('book.indexsortable', ['books'=> $books]);
+    }
+
+    public function indexadvancedsort() {
+        
+                //sortby neveikia su paginate funkcija
+                //orderby irgi mums nebetinka
+                //mes turesim sudaryti rysi tarp author ir book dar pries tai kai rysi sudaro laravelis
+                //supaprastina duomenu bazes uzklausa
+        // $books = Book::all();
+
+        //all()
+
+        $books = Book::select('*')->join('authors','books.author_id', '=', 'authors.id')->orderBy('authors.name', 'ASC')->paginate(5);
+        // dd($books->first());
+
+        return view('book.indexadvancedsort', ['books'=> $books]);
     }
 }

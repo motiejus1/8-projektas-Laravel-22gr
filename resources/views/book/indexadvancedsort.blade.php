@@ -2,13 +2,14 @@
 
 @section('content')
 <div class="container">
+    
 
 <table class="table table-striped">
     <tr>
-        <th>@sortablelink('id', 'ID')</th>
-        <th>@sortablelink('title', 'Title')</th>
-        <th>@sortablelink('description', 'Description')</th>
-        <th>@sortablelink('bookAuthor.name', 'Author ')</th>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Author id</th>
     </tr>
 
   
@@ -18,12 +19,12 @@
             <td>{{$book->title}}</td>
             <td>{{$book->description}}</td>
             {{-- autoriaus varda ir pavarde --}}
-            <td>{{$book->bookAuthor->name}} {{$book->bookAuthor->surname}}</td>
+            <td>{{$book->name}} {{$book->surname}} </td>
         </tr> 
         @endforeach
      
     </table>
-    {!! $books->appends(Request::except('page'))->render() !!}
+    
 </div>    
 
 @endsection
