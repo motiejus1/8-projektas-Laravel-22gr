@@ -38,3 +38,10 @@ Route::prefix('books')->group(function() {
     // Route::get('search', 'App\Http\Controllers\AuthorController@search')->name('author.search');
 
 });
+
+Route::prefix('ratings')->group(function() {
+    Route::get('', 'App\Http\Controllers\RatingController@index')->name('rating.index');
+    Route::get('create', 'App\Http\Controllers\RatingController@create')->name('rating.create');
+    Route::post('store', 'App\Http\Controllers\RatingController@store')->name('rating.store');
+
+});
