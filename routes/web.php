@@ -29,6 +29,8 @@ Route::prefix('authors')->group(function() {
 
 Route::prefix('books')->group(function() {
     Route::get('', 'App\Http\Controllers\BookController@index')->name('book.index');
+    Route::get('create', 'App\Http\Controllers\BookController@create')->name('book.create');
+    Route::post('store', 'App\Http\Controllers\BookController@store')->name('book.store');
     Route::get('bookfilter', 'App\Http\Controllers\BookController@bookfilter')->name('book.bookfilter');
     Route::get('indexpagination', 'App\Http\Controllers\BookController@indexpagination')->name('book.indexpagination');
     Route::get('indexsortfilter', 'App\Http\Controllers\BookController@indexsortfilter')->name('book.indexsortfilter');
