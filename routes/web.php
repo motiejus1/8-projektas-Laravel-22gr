@@ -23,6 +23,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::prefix('authors')->group(function() {
     Route::get('', 'App\Http\Controllers\AuthorController@index')->name('author.index');
+    Route::get('create', 'App\Http\Controllers\AuthorController@create')->name('author.create');
+    Route::post('store', 'App\Http\Controllers\AuthorController@store')->name('author.store');
     Route::get('search', 'App\Http\Controllers\AuthorController@search')->name('author.search');
 
 });
