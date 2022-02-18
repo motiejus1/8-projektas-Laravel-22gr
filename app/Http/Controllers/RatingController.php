@@ -108,4 +108,23 @@ class RatingController extends Controller
     {
         //
     }
+
+    public function createjavascript() {
+        return view('rating.createjavascript');
+    }
+    public function storejavascript(Request $request) {
+        $rating_title = $request->rating_title; //6, MASYVAS
+        $total = count($rating_title); //6
+      
+        for($i=0; $i<$total; $i++) {
+        
+                $rating = new Rating;
+                $rating->title = $request->rating_title[$i];
+                $rating->rating = $request->rating_rating[$i];
+
+                $rating->save();
+        }
+
+        return 0;
+    }
 }

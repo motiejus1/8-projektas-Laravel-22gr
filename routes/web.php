@@ -43,5 +43,6 @@ Route::prefix('ratings')->group(function() {
     Route::get('', 'App\Http\Controllers\RatingController@index')->name('rating.index');
     Route::get('create', 'App\Http\Controllers\RatingController@create')->name('rating.create');
     Route::post('store', 'App\Http\Controllers\RatingController@store')->name('rating.store');
-
+    Route::get('createjavascript', 'App\Http\Controllers\RatingController@createjavascript')->name('rating.createjavascript');
+    Route::post('storejavascript', 'App\Http\Controllers\RatingController@storejavascript')->name('rating.storejavascript');
 });
