@@ -35,14 +35,14 @@
         <div class="books-info d-none">
             <button type="button" class="btn btn-secondary add_field">Add</button>
             <button type="button" class="btn btn-danger remove_field">Remove</button>
-            <div class="book-info row">
+            <div class="book-info book-first row">
                 <div class="form-group col-md-6">
                     <label for="book_title">Title</label>
-                    <input class="form-control" type='text' name='book_title[]' />
+                    <input id="book_title" class="form-control" type='text' name='book_title[]' />
                 </div>
                 <div class="form-group col-md-6">
                     <label for="book_description">Description</label>
-                    <textarea class="form-control" name='book_description[]'> 
+                    <textarea id="book_description" class="form-control" name='book_description[]'> 
                     </textarea>
                 </div>
             </div>
@@ -59,6 +59,11 @@
     $(document).ready(function(){
         $('#author_newbooks').click(function() {
             $('.books-info').toggleClass('d-none');
+            //nenorime isaugoti senu reiksmiu
+            $('.book-info:not(.book-first)').remove();
+            //Laukeliu nunulinimas
+            $('#book_title').val('');
+            $('#book_description').val('');
         })
 
         $('.add_field').click(function(){
@@ -67,7 +72,7 @@
 
         $('.remove_field').click(function() {
             //kaip pasirinkti paskutini elementa kurio clase yra input-rating
-            $('.book-info:last-child').remove();
+            $('.book-info:last-child:not(.book-first)').remove();
         });
     })
 </script>    
