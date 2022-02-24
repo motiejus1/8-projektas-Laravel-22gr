@@ -1,11 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-    .invalid-feedback {
-        display:block;
-    }
-</style>    
+
 <div class="container">
 
     <div class="errors">
