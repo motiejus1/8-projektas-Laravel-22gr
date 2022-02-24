@@ -1,25 +1,68 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .invalid-feedback {
+        display:block;
+    }
+</style>    
 <div class="container">
+
+    <div class="errors">
+        {{-- {{print_r($errors)}}; --}}
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>
+                            {{$error}}
+                        </li>    
+                    @endforeach
+                </ul>
+            </div>
+        @endif    
+
+    </div>    
     <form method="POST" action="{{ route('author.store')}}">
         @csrf
         <div class="form-group">
             <label for="author_name">Name</label>
-            <input class="form-control" type='text' name='author_name' />
+            <input class="form-control @error('author_name') is-invalid @enderror" type='text' name='author_name' value="{{ old('author_name') }}" />
+         {{-- @error veikia kaip ifas, ar klaidu masyve yra klaida susisijusi su laukeliu author_name --}}
+            @error('author_name')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
         </div>
         <div class="form-group">
             <label for="author_surname">Surname</label>
-            <input class="form-control" type='text' name='author_surname' />
+            <input class="form-control @error('author_surname') is-invalid @enderror" type='text' name='author_surname' value="{{ old('author_surname') }}" />
+            @error('author_surname')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
         </div>
         <div class="form-group">
-            <label for="author_username">Name</label>
-            <input class="form-control" type='text' name='author_username' />
+            <label for="author_username">Username</label>
+            <input class="form-control @error('author_username') is-invalid @enderror" type='text' name='author_username' value="{{ old('author_username') }}"  />
+            @error('author_username')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
         </div>
         <div class="form-group">
             <label for="author_description">Description</label>
-            <textarea class="form-control" name='author_description'> 
+            <textarea class="form-control @error('author_description') is-invalid @enderror" name='author_description'>
+                {{ old('author_description') }}
             </textarea>
+            @error('author_description')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
         </div>
         <div class="form-group">
             <label for="author_newbooks">Add new books?</label>

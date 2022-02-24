@@ -140,6 +140,22 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
+
+
+
+
+        $request->validate([
+            //kaireje puseje input laukelio vardas => desineje validacijos taisykle
+            "author_name" => "required",
+            "author_surname" => "required",
+            "author_username" => "required",
+            "author_description" => "required",
+
+        ]);
+
+        //if, jeigu visos validacijos taisykles yra petenkinamos, kodas vykdomas toliau
+        //jeigu nors viena taisykle netenkinama, store funkcija nutraukiama, ji grazina kintamaji $errors
+
         $author = new Author;
         $author->name = $request->author_name;
         $author->surname = $request->author_surname;
@@ -147,6 +163,7 @@ class AuthorController extends Controller
         $author->description = $request->author_description;
 
         $author->save();
+
         //ar checkbox yra pazymetas
         if($request->author_newbooks) {
             //$request->book_title -> masyvas, ir jis yra tokio ilgio, kiek mes turime input
