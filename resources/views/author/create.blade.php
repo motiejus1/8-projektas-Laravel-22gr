@@ -69,8 +69,71 @@
             {{-- checkbox turi value atributa --}}
             {{-- jei chekbox nepazymetas, i backend yra grazinama false reiksme, jei pazymetas bet tai kas parasyta value --}}
 
+            {{-- validaciju testavimas. gt, lt funkcijos --}}
+            <div class="form-group">
+                <label for="number1">Number 1</label>
+                <input class="form-control @error('number1') is-invalid @enderror" type='number' name='number1' value="{{ old('number1') }}" />
+             {{-- @error veikia kaip ifas, ar klaidu masyve yra klaida susisijusi su laukeliu author_name --}}
+                @error('number1')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="number2">Number 2</label>
+                <input class="form-control @error('number2') is-invalid @enderror" type='number' name='number2' value="{{ old('number2') }}" />
+             {{-- @error veikia kaip ifas, ar klaidu masyve yra klaida susisijusi su laukeliu author_name --}}
+                @error('number2')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            {{-- Datu validacija --}}
+
+ <div class="form-group">
+                <label for="data1">data1</label>
+                <input class="form-control @error('data1') is-invalid @enderror" type='text' name='data1' value="{{ old('data1') }}" />
+             {{-- @error veikia kaip ifas, ar klaidu masyve yra klaida susisijusi su laukeliu author_name --}}
+                @error('data1')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="data2">data2</label>
+                <input class="form-control @error('data2') is-invalid @enderror" type='text' name='data2' value="{{ old('data2') }}" />
+             {{-- @error veikia kaip ifas, ar klaidu masyve yra klaida susisijusi su laukeliu author_name --}}
+                @error('data2')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+
+            {{-- Telefono numeris --}}
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input class="form-control @error('phone') is-invalid @enderror" type='text' name='phone' value="{{ old('phone') }}" />
+             {{-- @error veikia kaip ifas, ar klaidu masyve yra klaida susisijusi su laukeliu author_name --}}
+                @error('phone')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
 
         </div>
+
+
+
+
         <div class="books-info d-none">
             <button type="button" class="btn btn-secondary add_field">Add</button>
             <button type="button" class="btn btn-danger remove_field">Remove</button>

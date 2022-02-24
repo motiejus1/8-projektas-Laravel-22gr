@@ -143,13 +143,56 @@ class AuthorController extends Controller
 
 
 
+        //min galime ivesti minimaliai simboliu
+        //max kiek mes galime ivesti maksimaliai simboliu
+        //alpha tikrina ar ivestos tik raides
+        //alpha_num tikrina ar ivestos tik raides arba skaiciai
+        //alpha_dash tikrina ar ivestos tik raides arba skaiciai, bet papildomai priima 2 simbolius: _, -
+        //numeric - tikrina ar skaicius, integer(3.14, -5, 15, 0)
+        //integer - tikrina ar sveikasis skaicius(-, 0, +)
+        
+        //naturalusis skaicius yra nuo 1 - +inf
+        //gt(greater than)  gt:0
+        //gte(greater than or equal) gte:0
+        //lt(less than) lt:0
+        //lte(less than or equal ) lte:0
+        //integer| >0
 
+        //date - tikrina ar data
+        //date_equals -tikrina ar data lygi
+        //before - tikrina ar data yra ansktesne nei nurodyta
+        //before_or_equal -tikrina ar data yra ansktesne nei nurodyta arba lygi
+        //after - tikrina ar data yra velesne nei nurodyta
+        // after_or_equal - tikrina ar data yra velesne nei nurodyta arba lygi
+
+        // Patikrinti ar ivestas lietuviskas telefono numeris
+        
+        // +3706 1234567
+        
+        //+3706
+        //86
+
+        // string
+
+        // 861234567 - integer, kiek skaitmenu skaiciuje
+        
+        //required
+        //
+
+        //regex - simboliu paieska pagal tam tikrus kriterijus/sablonus
         $request->validate([
             //kaireje puseje input laukelio vardas => desineje validacijos taisykle
-            "author_name" => "required",
-            "author_surname" => "required",
-            "author_username" => "required",
-            "author_description" => "required",
+            // "author_name" => "required|min:2|max:10",
+            "author_name" => ['required','min:2','max:10'],
+            "author_surname" => "required|alpha",
+            "author_username" => "required|alpha_dash",
+            "author_description" => "required|integer|gte:0",
+            'number1' => "required",
+            'number2' => "required|gt:number1",
+            'data1' => "required|date|date_equals:data2",
+            'data2' => "date",
+            // 'phone' => "required|regex:/(86|\+3706)\d{7}"
+            'phone' => ["required", 'regex:/(86|\+3706)\d{7}/'],
 
         ]);
 
