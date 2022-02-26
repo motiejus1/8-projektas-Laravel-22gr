@@ -326,4 +326,70 @@ class AuthorController extends Controller
         // imu autorius, kur yra kazkokia salyga(kur id = 34)
         return view('author.search', ['authors'=> $authors ]);
     }
+
+    public function createvalidate(Request $request) {
+        
+        // $request->validate([
+        //     'authorsCount' => 'required|integer|gt:1'
+        // ]);
+
+        $authorsCount = $request->authorsCount;
+
+        if(!$authorsCount) {
+            $authorsCount = 3;
+        }
+
+        // $request->validate([
+        //          'authorsCount' => 'required|integer|gt:1'
+        //  ]);
+
+        return view("author.createvalidate", ['authorsCount' => $authorsCount]);
+    }
+
+    public function storevalidate(Request $request) {
+
+        // $request->validate([
+        //     //kaireje puseje input laukelio vardas => desineje validacijos taisykle
+        //     // "author_name" => "required|min:2|max:10",
+        //     "author_name" => ['required','min:2','max:10'],
+        //     "author_surname" => "required|alpha",
+        //     "author_username" => "required|alpha_dash",
+        //     "author_description" => "required",
+        // ]);
+
+            //  "author_name" => "required|min:2|max:10"
+            // $request->author_name = "test"
+            //pertikrina visas reiksmes 
+            // jeigu viskas gerai, leidzia kodui veikti toliau
+
+            //$request->author_name = ['test', 'test', 'test']
+            //ziurek author_name yra masyvas, ir tikrinik masyve esancias reiksmes
+            //pertikrina visas reiksmes 
+            // jeigu viskas gerai, leidzia kodui veikti toliau
+
+            // author_name[][name]
+            $request->validate([
+                "authorName.*.name" => "required|min:2|max:10",
+                "authorSurname.*.surname" => "required|alpha", //tik raides. Tarpas negalimas
+                "authorUsername.*.username" => "required|alpha_dash", //raides skaiciai - ir _. Tarpas negalimas
+                "authorDescription.*.description" => "required|alpha_num" //raides ir skaiciai. Tarpas negalimas
+            ]);
+        
+        $authorsCount = count($request->authorName);
+
+        // // dd($request->author_name);
+        
+        for($i=0; $i< $authorsCount; $i++ ) {
+            $author = new Author;
+            $author->name = $request->authorName[$i]['name'];
+            $author->surname = $request->authorSurname[$i]['surname'];
+            $author->username = $request->authorUsername[$i]['username'];
+            $author->description = $request->authorDescription[$i]['description'];
+            $author->save(); 
+        }
+        
+        
+       return redirect()->route('author.index');;
+    }
+
 }
